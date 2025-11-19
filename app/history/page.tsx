@@ -35,26 +35,32 @@ export default function History() {
     if (loading) return <div className="text-center mt-10">Loading...</div>;
 
     return (
-        <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6 text-gray-800">Attendance History</h1>
-            <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+        <div className="max-w-5xl mx-auto py-10 px-4">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold text-slate-800">Attendance History</h1>
+                <div className="text-sm text-slate-500">Total Records: {records.length}</div>
+            </div>
+            <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-100">
+                <table className="min-w-full divide-y divide-slate-100">
+                    <thead className="bg-slate-50/50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Time</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">End Time</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Start Time</th>
+                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">End Time</th>
+                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white divide-y divide-slate-100">
                         {records.map((record) => (
-                            <tr key={record.id}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{new Date(record.date).toLocaleDateString()}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(record.startTime).toLocaleTimeString()}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.endTime ? new Date(record.endTime).toLocaleTimeString() : '-'}</td>
+                            <tr key={record.id} className="hover:bg-slate-50/50 transition-colors">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-700">{new Date(record.date).toLocaleDateString()}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{new Date(record.startTime).toLocaleTimeString()}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{record.endTime ? new Date(record.endTime).toLocaleTimeString() : '-'}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${record.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${record.status === 'Completed'
+                                            ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                                            : 'bg-amber-100 text-amber-700 border border-amber-200'
+                                        }`}>
                                         {record.status}
                                     </span>
                                 </td>

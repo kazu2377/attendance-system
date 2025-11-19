@@ -131,7 +131,50 @@ export default function Calendar() {
     };
 
     return (
-        <div className='p-4 bg-white rounded-lg shadow'>
+        <div className='p-6 bg-white rounded-2xl shadow-xl border border-slate-100'>
+            <style jsx global>{`
+                .fc-button-primary {
+                    background-color: #3b82f6 !important;
+                    border-color: #3b82f6 !important;
+                }
+                .fc-button-primary:hover {
+                    background-color: #2563eb !important;
+                    border-color: #2563eb !important;
+                }
+                .fc-button-active {
+                    background-color: #1d4ed8 !important;
+                    border-color: #1d4ed8 !important;
+                }
+                .fc-daygrid-day.fc-day-today, .fc-timegrid-col.fc-day-today {
+                    background-color: #eff6ff !important;
+                }
+                .fc-col-header-cell {
+                    background-color: #f8fafc;
+                    padding: 8px 0;
+                }
+                /* Custom Event Styling */
+                .fc-event {
+                    border: none !important;
+                    background-color: transparent !important;
+                    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                    border-radius: 4px;
+                    padding: 2px;
+                }
+                .fc-event-main {
+                    color: #1e293b; /* slate-800 */
+                    padding: 4px;
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    border-left: 4px solid;
+                    height: 100%;
+                    background-color: #f8fafc; /* Default light background */
+                }
+                /* Dynamic coloring based on event color prop is tricky with pure CSS classes if we override .fc-event background.
+                   We will handle the specific colors in the render hook or by setting styles inline in eventContent if needed.
+                   But FullCalendar applies 'backgroundColor' to the root element. 
+                   We'll override this behavior to use the color for the border and a lighter version for the background.
+                */
+            `}</style>
             <FullCalendar
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 headerToolbar={{
@@ -139,7 +182,10 @@ export default function Calendar() {
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 }}
-                initialView='dayGridMonth'
+                initialView='timeGridWeek'
+                slotMinTime="08:00:00"
+                slotMaxTime="22:00:00"
+                allDaySlot={false}
                 editable={true}
                 selectable={true}
                 selectMirror={true}
@@ -148,6 +194,32 @@ export default function Calendar() {
                 select={handleDateSelect}
                 eventClick={handleEventClick}
                 eventDrop={handleEventDrop}
+                height="auto"
+                eventContent={(eventInfo) => {
+                    // Custom render to achieve the look
+                    const color = eventInfo.event.backgroundColor || '#3b82f6';
+                    // Generate a light version of the color for background (simple opacity approach)
+                    // Note: This is a simplification. For perfect pastel matching we'd need color manipulation.
+                    // We'll use a hardcoded map for MVP or just opacity.
+
+                    return (
+                        <div style={{
+                            height: '100%',
+                            backgroundColor: `${color}15`, // 15 is roughly 10% opacity hex
+                            borderLeft: `4px solid ${color}`,
+                            padding: '4px',
+                            borderRadius: '0 4px 4px 0',
+                            overflow: 'hidden',
+                            color: '#334155'
+                        }}>
+                            <div className="font-bold text-xs truncate">{eventInfo.timeText}</div>
+                            <div className="font-semibold text-sm truncate">{eventInfo.event.title}</div>
+                            {eventInfo.event.extendedProps.description && (
+                                <div className="text-xs truncate opacity-75">{eventInfo.event.extendedProps.description}</div>
+                            )}
+                        </div>
+                    );
+                }}
             />
         </div>
     );
