@@ -29,7 +29,7 @@ export default function Calendar() {
                     allDay: event.allDay,
                     description: event.description,
                     // Distinguish between attendance and manual events if mixed
-                    color: event.userId ? '#3788d8' : '#28a745'
+                    color: event.userId ? '#06C755' : '#28a745'
                 }));
 
                 // Also fetch attendance records to display?
@@ -109,7 +109,7 @@ export default function Calendar() {
         }
     };
 
-    const handleEventDrop = async (dropInfo: EventDropArg) => {
+    const handleEventDrop = async (dropInfo: any) => {
         const { event } = dropInfo;
         try {
             await fetch(`/api/events/${event.id}`, {
@@ -131,49 +131,49 @@ export default function Calendar() {
     };
 
     return (
-        <div className='p-6 bg-white rounded-2xl shadow-xl border border-slate-100'>
+        <div className='p-4 bg-white rounded-2xl shadow-sm border border-slate-100'>
             <style jsx global>{`
+                .fc {
+                    font-family: 'Inter', sans-serif;
+                }
                 .fc-button-primary {
-                    background-color: #3b82f6 !important;
-                    border-color: #3b82f6 !important;
+                    background-color: #06C755 !important;
+                    border-color: #06C755 !important;
+                    font-weight: 600;
                 }
                 .fc-button-primary:hover {
-                    background-color: #2563eb !important;
-                    border-color: #2563eb !important;
+                    background-color: #05b34d !important;
+                    border-color: #05b34d !important;
                 }
                 .fc-button-active {
-                    background-color: #1d4ed8 !important;
-                    border-color: #1d4ed8 !important;
+                    background-color: #049c43 !important;
+                    border-color: #049c43 !important;
                 }
                 .fc-daygrid-day.fc-day-today, .fc-timegrid-col.fc-day-today {
-                    background-color: #eff6ff !important;
+                    background-color: #f0fdf4 !important; /* Very light green */
                 }
                 .fc-col-header-cell {
-                    background-color: #f8fafc;
-                    padding: 8px 0;
+                    background-color: #F2F4F5;
+                    padding: 10px 0;
+                    color: #111111;
+                    font-weight: 600;
+                }
+                .fc-timegrid-slot-label {
+                    font-size: 0.75rem;
+                    color: #888;
                 }
                 /* Custom Event Styling */
                 .fc-event {
                     border: none !important;
                     background-color: transparent !important;
-                    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-                    border-radius: 4px;
-                    padding: 2px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+                    border-radius: 6px;
+                    padding: 0;
                 }
                 .fc-event-main {
-                    color: #1e293b; /* slate-800 */
-                    padding: 4px;
-                    font-size: 0.75rem;
-                    font-weight: 500;
-                    border-left: 4px solid;
+                    padding: 0;
                     height: 100%;
-                    background-color: #f8fafc; /* Default light background */
                 }
-                /* Dynamic coloring based on event color prop is tricky with pure CSS classes if we override .fc-event background.
-                   We will handle the specific colors in the render hook or by setting styles inline in eventContent if needed.
-                   But FullCalendar applies 'backgroundColor' to the root element. 
-                   We'll override this behavior to use the color for the border and a lighter version for the background.
-                */
             `}</style>
             <FullCalendar
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -194,28 +194,35 @@ export default function Calendar() {
                 select={handleDateSelect}
                 eventClick={handleEventClick}
                 eventDrop={handleEventDrop}
+                eventResize={handleEventDrop} // Reuse handleEventDrop as it updates start/end
                 height="auto"
                 eventContent={(eventInfo) => {
-                    // Custom render to achieve the look
-                    const color = eventInfo.event.backgroundColor || '#3b82f6';
-                    // Generate a light version of the color for background (simple opacity approach)
-                    // Note: This is a simplification. For perfect pastel matching we'd need color manipulation.
-                    // We'll use a hardcoded map for MVP or just opacity.
+                    const color = eventInfo.event.backgroundColor || '#06C755';
+                    const isAttendance = eventInfo.event.id.startsWith('attendance-');
 
                     return (
                         <div style={{
                             height: '100%',
-                            backgroundColor: `${color}15`, // 15 is roughly 10% opacity hex
-                            borderLeft: `4px solid ${color}`,
-                            padding: '4px',
-                            borderRadius: '0 4px 4px 0',
+                            backgroundColor: isAttendance ? '#fff' : `${color}`,
+                            borderLeft: isAttendance ? `4px solid ${color}` : 'none',
+                            padding: '4px 6px',
+                            borderRadius: '6px',
                             overflow: 'hidden',
-                            color: '#334155'
+                            color: isAttendance ? '#333' : '#fff',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center'
                         }}>
-                            <div className="font-bold text-xs truncate">{eventInfo.timeText}</div>
-                            <div className="font-semibold text-sm truncate">{eventInfo.event.title}</div>
+                            <div className="font-bold text-xs truncate">
+                                {eventInfo.timeText}
+                            </div>
+                            <div className="font-bold text-sm truncate leading-tight">
+                                {eventInfo.event.title}
+                            </div>
                             {eventInfo.event.extendedProps.description && (
-                                <div className="text-xs truncate opacity-75">{eventInfo.event.extendedProps.description}</div>
+                                <div className="text-xs truncate opacity-90 mt-1">
+                                    {eventInfo.event.extendedProps.description}
+                                </div>
                             )}
                         </div>
                     );
