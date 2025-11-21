@@ -36,14 +36,15 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-[80vh] space-y-10 bg-slate-50 py-12">
       <div className="text-center space-y-4">
         <h1 className="text-5xl font-extrabold text-slate-800 tracking-tight">
-          Attendance <span className="text-blue-600">Dashboard</span>
+          勤怠<span className="text-blue-600">ダッシュボード</span>
         </h1>
-        <p className="text-slate-500 text-lg">Manage your work hours efficiently</p>
+        <p className="text-slate-500 text-lg">労働時間の管理を効率的に行う</p>
+
       </div>
 
       <div className="p-8 bg-white rounded-2xl shadow-xl w-full max-w-md text-center border border-slate-100 transform transition-all hover:scale-105 duration-300">
         <div className="mb-8">
-          <p className="text-sm text-slate-400 uppercase tracking-wider font-semibold mb-2">Current Status</p>
+          <p className="text-sm text-slate-400 uppercase tracking-wider font-semibold mb-2"> 現在の状態</p>
           <div className={`text-3xl font-bold ${status === 'Working' ? 'text-emerald-500' : 'text-slate-400'}`}>
             {status}
           </div>
@@ -54,21 +55,21 @@ export default function Home() {
             onClick={() => handleAttendance('clock-in')}
             disabled={loading || status === 'Working'}
             className={`px-6 py-4 rounded-xl text-white font-bold shadow-lg transition-all transform active:scale-95 ${status === 'Working'
-                ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
-                : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 hover:shadow-blue-500/30'
+              ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+              : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 hover:shadow-blue-500/30'
               }`}
           >
-            Clock In
+            出勤
           </button>
           <button
             onClick={() => handleAttendance('clock-out')}
             disabled={loading || status === 'Idle'}
             className={`px-6 py-4 rounded-xl text-white font-bold shadow-lg transition-all transform active:scale-95 ${status === 'Idle'
-                ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
-                : 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 hover:shadow-rose-500/30'
+              ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+              : 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 hover:shadow-rose-500/30'
               }`}
           >
-            Clock Out
+            退勤
           </button>
         </div>
 
