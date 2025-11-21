@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+// ★この行を追加します
+export const runtime = 'edge';
 
 export async function GET() {
     try {
