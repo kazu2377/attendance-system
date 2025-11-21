@@ -1,11 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
-  --background: #F2F4F5; /* LINE Light Gray Background */
-  --foreground: #111111; /* LINE Dark Text */
-  --primary: #06C755; /* LINE Green */
+  --background: #F2F4F5;
+  /* LINE Light Gray Background */
+  --foreground: #111111;
+  /* LINE Dark Text */
+  --primary: #06C755;
+  /* LINE Green */
   --primary-hover: #05b34d;
   --secondary: #FFFFFF;
   --border: #E8E8E8;
@@ -13,7 +14,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #1b1b1b; /* Dark mode background */
+    --background: #1b1b1b;
+    /* Dark mode background */
     --foreground: #FFFFFF;
     --primary: #06C755;
     --primary-hover: #05b34d;
