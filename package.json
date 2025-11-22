@@ -15,8 +15,7 @@
     "@fullcalendar/timegrid": "^6.1.19",
     "@prisma/adapter-d1": "^7.0.0",
     "@prisma/client": "^6.19.0",
-    "next": "16.0.3",
-    "react": "19.2.0",
+    "next": "15.5.2",
     "react-dom": "19.2.0"
   },
   "devDependencies": {
