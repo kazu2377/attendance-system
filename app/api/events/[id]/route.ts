@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { getRequestContext } from '@cloudflare/next-on-pages';
+import { getPrisma } from '@/lib/prisma';
 // ★この行を追加します
 export const runtime = 'edge';
 
@@ -7,18 +8,20 @@ export async function PUT(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    try {
-        const { id } = await params;
-        const { title, start, end, allDay, description } = await request.json();
+    const { env } = getRequestContext();
+    const prisma = getPrisma(env.DB);
+    const { id } = await params;
 
+    try {
+        const body = await request.json();
         const event = await prisma.event.update({
             where: { id: parseInt(id) },
             data: {
-                title,
-                start: new Date(start),
-                end: end ? new Date(end) : null,
-                allDay,
-                description,
+                title: body.title,
+                start: new Date(body.start),
+                end: body.end ? new Date(body.end) : null,
+                allDay: body.allDay,
+                description: body.description,
             },
         });
         return NextResponse.json(event);
@@ -31,12 +34,15 @@ export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const { env } = getRequestContext();
+    const prisma = getPrisma(env.DB);
+    const { id } = await params;
+
     try {
-        const { id } = await params;
         await prisma.event.delete({
             where: { id: parseInt(id) },
         });
-        return NextResponse.json({ message: 'Event deleted' });
+        return NextResponse.json({ success: true });
     } catch (error) {
         return NextResponse.json({ error: 'Failed to delete event' }, { status: 500 });
     }

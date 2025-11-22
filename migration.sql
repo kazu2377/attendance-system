@@ -1,0 +1,21 @@
+﻿-- CreateTable
+CREATE TABLE "Attendance" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "userId" TEXT NOT NULL,
+    "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "startTime" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "endTime" DATETIME,
+    "status" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Event" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL,
+    "start" DATETIME NOT NULL,
+    "end" DATETIME,
+    "allDay" BOOLEAN NOT NULL DEFAULT false,
+    "description" TEXT,
+    "userId" TEXT NOT NULL
+);
+

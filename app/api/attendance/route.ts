@@ -1,14 +1,16 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-// ★この行を追加します
+import { getRequestContext } from '@cloudflare/next-on-pages';
+import { getPrisma } from '@/lib/prisma';
+
 export const runtime = 'edge';
 
-const prisma = new PrismaClient();
-
 export async function GET() {
+    const { env } = getRequestContext();
+    const prisma = getPrisma(env.DB);
+
     try {
         const records = await prisma.attendance.findMany({
-            orderBy: { date: 'desc' },
+            orderBy: { startTime: 'desc' },
         });
         return NextResponse.json(records);
     } catch (error) {
@@ -17,6 +19,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    const { env } = getRequestContext();
+    const prisma = getPrisma(env.DB);
+
     try {
         const { userId, action } = await request.json();
 
@@ -30,7 +35,6 @@ export async function POST(request: Request) {
             });
             return NextResponse.json(record);
         } else if (action === 'clock-out') {
-            // Find the latest active record
             const lastRecord = await prisma.attendance.findFirst({
                 where: { userId, status: 'Working' },
                 orderBy: { startTime: 'desc' },
